@@ -10,14 +10,13 @@ spec:
       storage: 10Gi
   storageClassName: standard-rwo
 
-  ---
-
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
 spec:
-  selectr:
+  selector:
     matchLabels:
       app: mysql  
   template:
@@ -26,11 +25,11 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: vivianipedroso/projeto-database:1.0
+      - name: mysql 
+        image: vivianipedroso/projeto-database:1.0
         args:
           - "--ignore-db-dir=lost+found"
         imagePullPolicy: Always
-        name: mysql
         ports:
         - containerPort: 3306
           name: mysql
@@ -40,7 +39,8 @@ spec:
       volumes:
       - name: mysql-dados
         persistentVolumeClaim:
-          ClaimName: mysql-dados
+          claimName: mysql-dados
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,7 +50,7 @@ metadata:
     app: php
 spec:
   replicas: 6
-  selectr:
+  selector:
     matchLabels:
       app: php
   template:
@@ -59,7 +59,8 @@ spec:
         app: php
     spec:
       containers:
-      - image: vivianipedroso/projeto-backend:1.0
+      - name: php
+        image: vivianipedroso/projeto-backend:1.0
         imagePullPolicy: Always
-        posts:
+        ports:
         - containerPort: 80
